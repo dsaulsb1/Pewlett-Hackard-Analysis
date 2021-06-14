@@ -203,9 +203,25 @@ SELECT DISTINCT ON (emp_titles.emp_no) emp_titles.emp_no, emp_titles.first_name,
 	FROM emp_titles 
 	ORDER BY emp_titles.emp_no ASC, emp_titles.to_date DESC;
 
+SELECT COUNT(unique_titles.title), unique_titles.title
+INTO retiring_titles
+FROM unique_titles
+GROUP BY unique_titles.title
+ORDER BY COUNT(unique_titles) DESC
 
+SELECT DISTINCT ON (e.emp_no) e.emp_no, e.first_name,
+    e.last_name, e.birth_date, de.from_date,
+    de.to_date, ti.title
 
-
+INTO mentor_elig
+FROM employees as e
+LEFT JOIN dept_emp as de
+ON e.emp_no = de.emp_no
+LEFT JOIN titles as ti
+ON e.emp_no = ti.emp_no
+WHERE (de.to_date = '9999-01-01')
+    AND (e.birth_date BETWEEN '1965-01-01' AND '1965-12-31')
+ORDER BY e.emp_no
 
 
 
